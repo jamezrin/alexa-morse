@@ -62,7 +62,4 @@ def convert_letter(letter):
     return morse_word + ' '
 
 
-try:
-    print(to_morse("SOS SOS"))
-except ValueError as e:
-    print("ERROR: ", e)
+print(to_morse("funciona"))

@@ -24,7 +24,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Bienvenido a codigo morse."
+        speak_output = "Bienvenido a morse, dime una frase y la traduzco a codigo morse?."
 
         return (
             handler_input.response_builder
@@ -49,17 +49,79 @@ class ConvertToMorseIntentHandler(AbstractRequestHandler):
         speak_output = ""
 
         if phrase.value:
-            speak_output = "Has dicho " + phrase.value
+            speak_output = str(Morse.convert(phrase.value))
+            return (
+                handler_input.response_builder
+                    .speak(speak_output)
+                    .set_should_end_session(True)
+                    # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                    .response
+            )
         else:
             return handler_input.response_builder.add_directive().response
 
-        return (
-            handler_input.response_builder
-                .speak(speak_output)
-                .set_should_end_session(True)
-                # .ask("add a reprompt if you want to keep the session open for the user to respond")
-                .response
-        )
+
+class Morse:
+    morse_map = {
+        'A': [0, 1],
+        'B': [1, 0, 0, 0],
+        'C': [1, 0, 1, 0],
+        'D': [1, 0, 0],
+        'E': [0],
+        'F': [0, 0, 1, 0],
+        'G': [1, 1, 0],
+        'H': [1, 1, 1, 1],
+        'I': [0, 0],
+        'J': [0, 1, 1, 1],
+        'K': [1, 0, 1],
+        'L': [0, 1, 0, 0],
+        'M': [1, 1],
+        'N': [1, 0],
+        'O': [1, 1, 1],
+        'P': [0, 1, 1, 0],
+        'Q': [1, 1, 0, 1],
+        'R': [0, 1, 0],
+        'S': [0, 0, 0],
+        'T': [1],
+        'U': [0, 0, 1],
+        'V': [0, 0, 0, 1],
+        'W': [0, 1, 1],
+        'X': [1, 0, 0, 1],
+        'Y': [1, 0, 1, 1],
+        'Z': [1, 0, 1, 1],
+        '1': [0, 1, 1, 1, 1],
+        '2': [0, 0, 1, 1, 1],
+        '3': [0, 0, 0, 1, 1],
+        '4': [0, 0, 0, 0, 1],
+        '5': [0, 0, 0, 0, 0],
+        '6': [1, 0, 0, 0, 0],
+        '7': [1, 1, 0, 0, 0],
+        '8': [1, 1, 1, 0, 0],
+        '9': [1, 1, 1, 1, 0],
+        '0': [1, 1, 1, 1, 1],
+    }
+
+    def convert(self_phrase):
+        temp = ""
+        self = self_phrase.upper()
+        for i in self:
+            if i == ' ':
+                temp += ' '
+            elif i in Morse.morse_map:
+                temp += Morse.convert_letter(i)
+            else:
+                raise ValueError("El texto tiene un caracter no soportado.")
+        return temp
+
+    def convert_letter(letter):
+        letter_value = Morse.morse_map.get(letter)
+        morse_word = ""
+        for i in letter_value:
+            if i == 0:
+                morse_word += '.'
+            elif i == 1:
+                morse_word += '-'
+        return morse_word + ' '
 
 
 class HelpIntentHandler(AbstractRequestHandler):
