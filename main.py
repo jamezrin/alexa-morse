@@ -43,7 +43,7 @@ def to_morse(text):
     text = text.upper()
     for i in text:
         if i == ' ':
-            temp += i
+            temp += ' '
         elif i in MORSE_MAP:
             temp += convert_letter(i)
         else:
@@ -59,10 +59,10 @@ def convert_letter(letter):
             morse_word += '.'
         elif i == 1:
             morse_word += '-'
-    return morse_word
+    return morse_word + ' '
 
 
 try:
-    print(to_morse("SOCORRO"))
+    print(to_morse("SOS SOS"))
 except ValueError as e:
     print("ERROR: ", e)
