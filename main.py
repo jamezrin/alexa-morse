@@ -1,4 +1,3 @@
-
 MORSE_MAP = {
     'A': [0, 1],
     'B': [1, 0, 0, 0],
@@ -39,3 +38,31 @@ MORSE_MAP = {
 }
 
 
+def to_morse(text):
+    temp = ""
+    text = text.upper()
+    for i in text:
+        if i == ' ':
+            temp += i
+        elif i in MORSE_MAP:
+            temp += convert_letter(i)
+        else:
+            raise ValueError("El texto tiene un caracter no soportado.")
+    return temp
+
+
+def convert_letter(letter):
+    letter_value = MORSE_MAP.get(letter)
+    morse_word = ""
+    for i in letter_value:
+        if i == 0:
+            morse_word += '.'
+        elif i == 1:
+            morse_word += '-'
+    return morse_word
+
+
+try:
+    print(to_morse("SOCORRO"))
+except ValueError as e:
+    print("ERROR: ", e)
