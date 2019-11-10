@@ -24,12 +24,11 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Bienvenido a morse, dime una frase y la traduzco a codigo morse?."
+        speak_output = "Bienvenido al traductor a código morse, dime convierte seguido de lo que quieres que te convierta."
 
         return (
             handler_input.response_builder
                 .speak(speak_output)
-                .ask(speak_output)
                 .response
         )
 
@@ -46,15 +45,20 @@ class ConvertToMorseIntentHandler(AbstractRequestHandler):
 
         slots = handler_input.request_envelope.request.intent.slots
         phrase = slots["phrase"]
-        speak_output = ""
-
         if phrase.value:
-            speak_output = str(Morse.convert(phrase.value))
+            morse_chars = Morse.convert(phrase.value)
+            speak_output = \
+                f"<speak>" \
+                    f"<say-as interpret-as=\"characters\">" \
+                        f"<prosody rate=\"slow\">" \
+                            f"{morse_chars}" \
+                        f"</prosody>" \
+                    f"</say-as>" \
+                f"</speak>"
             return (
                 handler_input.response_builder
                     .speak(speak_output)
                     .set_should_end_session(True)
-                    # .ask("add a reprompt if you want to keep the session open for the user to respond")
                     .response
             )
         else:
@@ -133,7 +137,7 @@ class HelpIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "You can say hello to me! How can I help?"
+        speak_output = "Para que te traduzca tu frase o palabra, necesito que digas, traduce y la frase."
 
         return (
             handler_input.response_builder
@@ -153,7 +157,7 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Goodbye!"
+        speak_output = "Adios!"
 
         return (
             handler_input.response_builder
@@ -215,7 +219,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
         # type: (HandlerInput, Exception) -> Response
         logger.error(exception, exc_info=True)
 
-        speak_output = "Sorry, I had trouble doing what you asked. Please try again."
+        speak_output = "Lo siento no he podido hacer lo que me has pedido, dimelo otra vez."
 
         return (
             handler_input.response_builder
