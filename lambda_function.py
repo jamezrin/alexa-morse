@@ -137,7 +137,7 @@ class HelpIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Para que te traduzca tu frase o palabra, necesito que digas, traduce y la frase."
+        speak_output = "Para que te traduzca tu frase o palabra, necesito que digas, convierte seguido de la frase."
 
         return (
             handler_input.response_builder
@@ -157,7 +157,7 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Adios!"
+        speak_output = "Hasta pronto!"
 
         return (
             handler_input.response_builder
